@@ -1,0 +1,16 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
+
+<h1>User page for {{ user }}</h1>
+<p>Your polls</p>
+<ul>
+    {% for poll in polls %}
+    <li>
+        <a href="{% url 'polls:detail' poll.pk %}">{{ poll.question_text }}</a>
+    </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'polls:create-poll' %}">Create poll</a>
+<a href="{% url 'polls:index' %}">Back to homepage</a>
+<a href="{% url 'polls:log-out' %}">Log out</a>

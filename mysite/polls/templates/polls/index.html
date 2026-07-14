@@ -1,6 +1,7 @@
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
+<h1>Polls</h1>
 {% if latest_question_list %}
     <ul>
     {% for question in latest_question_list %}
@@ -9,4 +10,12 @@
     </ul>
 {% else %}
     <p>No polls are available.</p>
+{% endif %}
+{% if user.is_authenticated  %}
+<a href="{% url 'polls:create-poll' %}">Create poll</a>
+<a href="{% url 'polls:log-out' %}">Log out</a>
+<a href="{% url 'polls:user-page' user.id %}">User page</a>
+{% else %}
+<a href="{% url 'polls:new-user' %}">Create user</a>
+<a href="{% url 'polls:log-in' %}">Login user</a>
 {% endif %}

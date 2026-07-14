@@ -3,6 +3,9 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.db import connection
 
 from .models import Choice, Question
 
@@ -36,7 +39,7 @@ class ResultsView(generic.DetailView):
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     try:
-        selected_choice = question.choice_set.get(pk=request.POST['choice'])
+        selected_choice = question.choice_set.get(pk=request.GET['choice'])
     except (KeyError, Choice.DoesNotExist):
         # Redisplay the question voting form.
         return render(request, 'polls/detail.html', {
@@ -50,3 +53,70 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+def create_poll(request):
+    return render(request, 'polls/create-poll.html')
+
+def commit_create_poll(request):
+    poll = request.POST['title']
+    created = timezone.now()
+    asker = request.user.id
+
+    with connection.cursor() as cursor:
+        cursor.execute(f"INSERT INTO polls_question (question_text, pub_date, asker_id) VALUES ('{poll}', '{created}', '{asker}')")
+
+    question_id = cursor.lastrowid
+    question = Question.objects.get(id=question_id)
+    choices = request.POST.getlist('choice')
+
+    for entry in choices:
+        Choice.objects.create(question=question,
+        choice_text = entry)
+
+    return HttpResponseRedirect(reverse('polls:index'))
+
+def user_page(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    polls = Question.objects.filter(asker=user_id)
+    return render(request, 'polls/user-page.html', {'user': user, 'polls': polls})
+
+def new_user(request):
+    return render(request, 'polls/new-user.html')
+
+def create_user(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    try:
+        user = User.objects.create_user(username=username,
+                    password=password)
+    except:
+        return render(request, 'polls/new-user.html', {
+            'error_message': 'something went wrong'
+        })
+    return HttpResponseRedirect(reverse('polls:index'))
+
+def log_in(request):
+    return render(request, 'polls/login.html')
+
+def log_out(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('polls:index'))
+
+def commit_login(request):
+    try:
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return HttpResponseRedirect(reverse('polls:index'))
+        else:
+            return render(request, 'polls/login.html', {
+                'error_message': 'Invalid username or password.'
+            })
+
+    except:
+        return render(request, 'polls/login.html', {
+                'error_message': 'something went wrong'
+            })

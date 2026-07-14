@@ -1,0 +1,47 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
+
+<form action="{% url 'polls:commit-create-poll' %}" method="post">
+    {% csrf_token %}
+    <label for='title'>Poll title</label>
+    <br>
+    <input name='title' type='text' required>
+    <br>
+    <label for='choices'> Choices: </label>
+    <div id='choices'>
+        <div>
+            <input name='choice' type='text' required>
+        </div>
+        <div>
+            <input name='choice' type='text' required>
+        </div>
+    </div>
+    <button type='button' onclick='addChoice()'>Add choice</button>
+    <br>
+    <input type='submit' value='Create poll'></input>
+</form>
+<a href="{% url 'polls:index' %}">Back to homepage</a>
+<script>
+    function addChoice() {
+        const div = document.getElementById('choices')
+
+        const container = document.createElement('div')
+
+        const input = document.createElement('input')
+        input.name = 'choice'
+        input.type = 'text'
+
+        const button = document.createElement('button')
+        button.type = 'button'
+        button.name = 'remove'
+        button.textContent = 'Remove'
+        button.onclick = function () {
+            this.parentElement.remove()
+        }
+
+        container.appendChild(input)
+        container.appendChild(button)
+        div.appendChild(container)
+    }
+</script>
