@@ -48,27 +48,30 @@ def create_poll(request):
     return render(request, 'polls/create-poll.html')
 
 def commit_create_poll(request):
-    poll = request.POST['title']
-    created = timezone.now()
-    asker = request.user.id
-
-    with connection.cursor() as cursor:
-        cursor.execute(f"INSERT INTO polls_question (question_text, pub_date, asker_id) VALUES ('{poll}', '{created}', '{asker}')")
-
-    question_id = cursor.lastrowid
-    question = Question.objects.get(id=question_id)
+    poll = Question.objects.create(
+        question_text = request.POST['title'],
+        asker = request.user,
+        pub_date = timezone.now()
+    )
+    
     choices = request.POST.getlist('choice')
 
     for entry in choices:
-        Choice.objects.create(question=question,
+        Choice.objects.create(question=poll,
         choice_text = entry)
 
     return HttpResponseRedirect(reverse('polls:index'))
 
 def user_page(request, user_id):
     user = get_object_or_404(User, pk=user_id)
-    polls = Question.objects.filter(asker=user_id)
-    return render(request, 'polls/user-page.html', {'user': user, 'polls': polls})
+
+    search = request.GET.get('query', '')
+    
+    with connection.cursor() as cursor:
+        query = f"SELECT * FROM polls_question WHERE asker_id = {user_id} AND question_text LIKE '%{search}%'"
+        cursor.execute(query)
+        polls = cursor.fetchall()
+    return render(request, 'polls/user-page.html', {'user': user, 'polls': polls, 'search': search})
 
 def new_user(request):
     return render(request, 'polls/new-user.html')

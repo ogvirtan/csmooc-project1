@@ -3,11 +3,15 @@
 <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
 
 <h1>User page for {{ user }}</h1>
+<form method='get'>
+    <input type='text' name='query' value='{{search}}'>
+    <button type='submit'>Search</button>
+</form>
 <p>Your polls</p>
 <ul>
     {% for poll in polls %}
     <li>
-        <a href="{% url 'polls:detail' poll.pk %}">{{ poll.question_text }}</a>
+        <a href="{% url 'polls:detail' poll.0 %}">{{ poll.1 }}</a>
     </li>
     {% endfor %}
 </ul>
