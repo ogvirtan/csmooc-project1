@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.views import generic
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import connection
 
 from .models import Choice, Question
@@ -32,7 +33,7 @@ class ResultsView(generic.DetailView):
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     try:
-        selected_choice = question.choice_set.get(pk=request.GET['choice'])
+        selected_choice = question.choice_set.get(pk=request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
         return render(request, 'polls/detail.html', {
             'question': question,
@@ -44,17 +45,19 @@ def vote(request, question_id):
 
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
+@login_required
 def create_poll(request):
     return render(request, 'polls/create-poll.html')
 
+@login_required
 def commit_create_poll(request):
     poll = Question.objects.create(
-        question_text = request.POST['title'],
+        question_text = request.GET['title'],
         asker = request.user,
         pub_date = timezone.now()
     )
     
-    choices = request.POST.getlist('choice')
+    choices = request.GET.getlist('choice')
 
     for entry in choices:
         Choice.objects.create(question=poll,
@@ -62,6 +65,7 @@ def commit_create_poll(request):
 
     return HttpResponseRedirect(reverse('polls:index'))
 
+@login_required
 def user_page(request, user_id):
     user = get_object_or_404(User, pk=user_id)
 
@@ -91,6 +95,7 @@ def create_user(request):
 def log_in(request):
     return render(request, 'polls/login.html')
 
+@login_required
 def log_out(request):
     logout(request)
     return HttpResponseRedirect(reverse('polls:index'))

@@ -2,7 +2,7 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
 
-<form action="{% url 'polls:commit-create-poll' %}" method="post">
+<form action="{% url 'polls:commit-create-poll' %}" method="get">
     {% csrf_token %}
     <label for='title'>Poll title</label>
     <br>
