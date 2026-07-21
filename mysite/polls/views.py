@@ -52,11 +52,13 @@ def create_poll(request):
 @login_required
 def commit_create_poll(request):
     poll = Question.objects.create(
+        #question_text = request.POST['title'],
         question_text = request.GET['title'],
         asker = request.user,
         pub_date = timezone.now()
     )
     
+    #choices = request.POST.getlist('choice')
     choices = request.GET.getlist('choice')
 
     for entry in choices:
