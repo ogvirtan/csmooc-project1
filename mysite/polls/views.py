@@ -57,7 +57,7 @@ def commit_create_poll(request):
         asker = request.user,
         pub_date = timezone.now()
     )
-    
+
     #choices = request.POST.getlist('choice')
     choices = request.GET.getlist('choice')
 
@@ -66,6 +66,17 @@ def commit_create_poll(request):
         choice_text = entry)
 
     return HttpResponseRedirect(reverse('polls:index'))
+
+# @login_required
+# def user_page(request):
+#     user = request.user
+#     search = request.GET.get('query', '')
+    
+#     polls = Question.objects.filter(
+#         question_text__icontains=search,
+#         asker=user
+#     )
+#     return render(request, 'polls/user-page.html', {'user': user, 'polls': polls, 'search': search})
 
 @login_required
 def user_page(request, user_id):
