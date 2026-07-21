@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'axes',
 ]
 
 MIDDLEWARE = [
@@ -26,6 +27,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # 'axes.middleware.AxesMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -71,6 +73,18 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# AUTHENTICATION_BACKENDS = [
+#     'axes.backends.AxesStandaloneBackend',
+#     'django.contrib.auth.backends.ModelBackend',
+# ]
+
+# AXES_FAILURE_LIMIT = 5
+# AXES_COOLDOWN_TIME = 1
+# AXES_RESET_ON_SUCCESS = True
+# AXES_LOCKOUT_PARAMETERS = [
+#     'username', 'ip_address'
+# ]
 
 LANGUAGE_CODE = 'en-us'
 
