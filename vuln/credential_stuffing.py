@@ -9,6 +9,12 @@ csrf_token = session.cookies['csrftoken']
 
 username = input('Provide a username to try passwords on:')
 passwords = [
+    'password',
+    'password123',
+    'pass123word'
+    '4123',
+    '3412',
+    '2341',
     '1234',
     '12345',
     'asd',
