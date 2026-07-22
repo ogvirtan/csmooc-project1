@@ -11,7 +11,9 @@
 <ul>
     {% for poll in polls %}
     <li>
+        {% comment %}
         <!--<a href="{% url 'polls:detail' poll.pk %}">{{ poll.question_text }}</a>-->
+        {% endcomment %}
         <a href="{% url 'polls:detail' poll.0 %}">{{ poll.1 }}</a>
     </li>
     {% endfor %}
