@@ -1,7 +1,9 @@
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
+{% comment %}
 <!--<form action="{% url 'polls:commit-create-poll' %}" method="post">-->
+{% endcomment %}
 <form action="{% url 'polls:commit-create-poll' %}" method="get">
     {% csrf_token %}
     <label for='title'>Poll title</label>
