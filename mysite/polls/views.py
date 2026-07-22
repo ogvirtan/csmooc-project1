@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import connection
+#from django.views.decorators.http import require_POST
 
 from .models import Choice, Question
 
@@ -49,6 +50,7 @@ def vote(request, question_id):
 def create_poll(request):
     return render(request, 'polls/create-poll.html')
 
+#@require_POST
 @login_required
 def commit_create_poll(request):
     poll = Question.objects.create(
